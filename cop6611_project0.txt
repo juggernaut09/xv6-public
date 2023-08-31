@@ -15,12 +15,13 @@ Ans: System call numbers are defined in `syscall.h` header file and they are 21.
 
 4) In the implementation of the fork system call, what is the local variable name for the pointer to the process control block of the child processes? What about the PCB for the parent process?
 Ans:
-np points to the ProcessControlBlock of the newly created child process.
+`np` points to the ProcessControlBlock of the newly created child process.
 struct proc *np;
-curproc points to the ProcessControlBlock of the current process
+`curproc` points to the ProcessControlBlock of the current process
 struct proc *curproc = myproc();
 
 
-Venkat Teja Ravi 
+Team members name:
 Abhiram Anand
-
+Venkat Teja Ravi
+Vamsi krishna Sripathi
