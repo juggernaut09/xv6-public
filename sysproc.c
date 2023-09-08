@@ -89,3 +89,9 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+int
+ sys_uniq(void) {
+    printf(1, "Hello world\n");
+    return 12;
+ }
