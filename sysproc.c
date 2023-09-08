@@ -92,6 +92,8 @@ sys_uptime(void)
 
 int
  sys_uniq(void) {
-    printf(1, "Hello world\n");
-    return 12;
+    int n;
+    if(argint(0, &n) < 0)
+      return -1;
+    return uniq(n);
  }
