@@ -92,8 +92,26 @@ sys_uptime(void)
 
 int
  sys_uniq(void) {
-    int n;
-    if(argint(0, &n) < 0)
+    int argc;
+    char *argv[MAXARG];
+    int i;
+    uint uargv, uarg;
+
+    if(argint(0, &argc) < 0 || argint(1, (int*)&uargv) < 0){
       return -1;
-    return uniq(n);
+    }
+    memset(argv, 0, sizeof(argv));
+    for(i=0;; i++){
+      if(i >= NELEM(argv))
+        return -1;
+      if(fetchint(uargv+4*i, (int*)&uarg) < 0)
+        return -1;
+      if(uarg == 0){
+        argv[i] = 0;
+        break;
+      }
+      if(fetchstr(uarg, &argv[i]) < 0)
+        return -1;
+    }
+    return uniq(argc, argv);
  }

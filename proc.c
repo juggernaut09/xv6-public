@@ -496,11 +496,6 @@ kill(int pid)
   return -1;
 }
 
-int uniq(int n)
-{
-  return n;
-}
-
 //PAGEBREAK: 36
 // Print a process listing to console.  For debugging.
 // Runs when user types ^P on console.
@@ -536,4 +531,13 @@ procdump(void)
     }
     cprintf("\n");
   }
+}
+
+int uniq(int argc, char* argv[])
+{
+  cprintf("%d", argc);
+  for(int i=0; i < argc; i++){
+    cprintf("Argument %d: %s\n", i, argv[i]);
+  }
+  return argc;
 }
