@@ -43,17 +43,17 @@ void dataRead(char *fname){
 }
 
 // Basic uniq functionality
-void uniqbasic(){
-    char buffer[100];
-    for(int i = 0; i < length; i++){
-        strcpy(buffer, arr[i]);  // Copying the strings to the buffer for the comparison
-        if(strcmp(buffer, arr[i+1]) == 0){
-            continue;  // If the consective lines are same, continue with the next strings
-        }else{
-            printf(1, "%s\n", buffer);
-        }
-    }
-}
+// void uniqbasic(){
+//     char buffer[100];
+//     for(int i = 0; i < length; i++){
+//         strcpy(buffer, arr[i]);  // Copying the strings to the buffer for the comparison
+//         if(strcmp(buffer, arr[i+1]) == 0){
+//             continue;  // If the consective lines are same, continue with the next strings
+//         }else{
+//             printf(1, "%s\n", buffer);
+//         }
+//     }
+// }
 
 
 // keeping a count of the entered strings
@@ -127,65 +127,83 @@ void uniqifunction(){
 // redirecting the output of the cat command to input of the uniq 
 void pipeFunction(){
     init();
-    char buffer[1024],buffer1[1024];
-        int inp,i, index=0;
+    char read_buffer[1024];
+    char string[1024];
+        int number_of_bytes_read,i, index=0;
         int counter=0;
-        while((inp = read(0, buffer, sizeof(buffer))) > 0) {
-            for (i = 0; i < inp; i++)
+        // Reading file contents, we could have used the dataRead function 
+        // But we are passing fd instead of filename.
+        while((number_of_bytes_read = read(0, read_buffer, sizeof(read_buffer))) > 0) {
+            // char takes 1 byte exactly in C. 
+            //So we are reading 1024 characters in single stride.
+            for (i = 0; i < number_of_bytes_read; i++)
             {
-                if(buffer[i] != '\n'){
-                    
-                    buffer1[index++] = buffer[i];
-                        
-                }else{
-                    strcpy(arr[counter++], buffer1);
-                    memset(buffer1, '\0', 1024);
-                    length++;
+                if(read_buffer[i] != '\n'){
+                    string[index] = read_buffer[i]; // Storing each character in the string
+                    index = index + 1;                        
+                }else{ // If it is newline.
+                    strcpy(arr[counter], string); //Store the string in arr of strings.
+                    counter = counter + 1;
+                    memset(string, '\0', 1024); //Empty the String buffer.
+                    length = length + 1;
                     index = 0;
                 }
             }
         }
-        uniqbasic();
+    // uniqbasic();
 }
 
 
 // main function
-int main(int argc, char* argv[]){
-    if(argc<=1){
-        pipeFunction();
-        }
-    if(argc == 2){
-        init();
-        dataRead(argv[1]);
-        uniqbasic();
-    }
-    if(argc == 3){
-        if(strcmp(argv[1], "-d") == 0){
-             init();
-        dataRead(argv[2]);
-        uniqdfunction();
-        }
-        if(strcmp(argv[1], "-i") == 0){
-             init();
-            dataRead(argv[2]);
-            uniqifunction();
-        }
-        if(strcmp(argv[1], "-c") == 0){
-             init();
-        dataRead(argv[2]);
-        uniqcfunction();
-        }
-    if(argc > 3){
-        printf(1, "Too many arguments given");
-    }
-    }
-   exit();
-}
+// int main(int argc, char* argv[]){
+//     if(argc<=1){
+//         pipeFunction();
+//         }
+//     if(argc == 2){
+//         init();
+//         dataRead(argv[1]);
+//         uniqbasic();
+//     }
+//     if(argc == 3){
+//         if(strcmp(argv[1], "-d") == 0){
+//              init();
+//         dataRead(argv[2]);
+//         uniqdfunction();
+//         }
+//         if(strcmp(argv[1], "-i") == 0){
+//              init();
+//             dataRead(argv[2]);
+//             uniqifunction();
+//         }
+//         if(strcmp(argv[1], "-c") == 0){
+//              init();
+//         dataRead(argv[2]);
+//         uniqcfunction();
+//         }
+//     if(argc > 3){
+//         printf(1, "Too many arguments given");
+//     }
+//     }
+//    exit();
+// }
 
-// int 
-// main(int argc, char* argv[]) {
-//     // printf(1, "return val of system call is %d\n", uniq(argc, argv));
-//     // printf(1, "Congrats !! You have successfully added new system  call in xv6 OS :) \n");
-//     uniq(argc, argv);
-//     exit();
-//  }
+int 
+main(int argc, char* argv[]) {
+
+    char *flag = "basic";
+    init();
+    dataRead(argv[1]);
+    
+    char *arr_of_str[20];
+    
+    for(int i = 0; i< 20; i++){
+        arr_of_str[i] = arr[i];
+    }
+    printf(1, "The length is :%d\n", length);
+    for(int i=0; i < length; i++){
+        printf(1,"");
+    }
+    uniq(flag, arr_of_str, length);
+    exit();
+    return 0;
+ }

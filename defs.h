@@ -120,7 +120,7 @@ void            userinit(void);
 int             wait(void);
 void            wakeup(void*);
 void            yield(void);
-int             uniq(int, char*[]);
+int             uniq(char*, char**, int);
 
 // swtch.S
 void            swtch(struct context**, struct context*);
