@@ -42,87 +42,7 @@ void dataRead(char *fname){
     }
 }
 
-// Basic uniq functionality
-// void uniqbasic(){
-//     char buffer[100];
-//     for(int i = 0; i < length; i++){
-//         strcpy(buffer, arr[i]);  // Copying the strings to the buffer for the comparison
-//         if(strcmp(buffer, arr[i+1]) == 0){
-//             continue;  // If the consective lines are same, continue with the next strings
-//         }else{
-//             printf(1, "%s\n", buffer);
-//         }
-//     }
-// }
 
-
-// keeping a count of the entered strings
-void uniqcfunction(){
-    char buffer[100];
-    int count = 1; 
-    for(int i = 0; i < length; i++){
-        strcpy(buffer, arr[i]);
-        if(strcmp(buffer, arr[i+1]) == 0){
-            count++; // If both the lines are same, we increment the count  
-            continue;
-        }else{
-            printf(1, "%d %s\n",count, buffer); 
-            count = 1;
-        }
-    }
-}
-
-
-// printing only the duplicate lines
-void uniqdfunction(){
-    char buffer[100];
-    int flag = 0;
-    for(int i = 0; i < length; i++){
-        strcpy(buffer, arr[i]);
-        if(strcmp(buffer, arr[i+1]) == 0){
-            flag = 1; // using flag to note that two lines are same
-            continue;
-        }else{
-            if(flag == 1)
-            printf(1, "%s\n", buffer);
-            flag = 0;
-        }
-    }
-}
-
-
-// ignoring the case sensitivity 
-void uniqifunction(){
-    char buffer[100];
-    char temp[100];
-    char next[100];
-    int i=0;
-    for(i = 0; i < length; i++){
-        strcpy(buffer, arr[i]);
-        strcpy(temp, buffer);
-        strcpy(next, arr[i + 1]);
-
-        // converting all the characters in the string to the lower case 
-        for(int j=0;buffer[j]!='\0';j++){
-            if(buffer[j]>=65 && buffer[j]<=90){
-                buffer[j]=buffer[j]+32;
-            }
-        }
-
-        for(int j=0;next[j]!='\0';j++){
-            if(next[j]>=65 && next[j]<=90){
-                next[j]=next[j]+32;
-            }
-        }
-
-        // comparing both the cases and printing only the unique string
-        if(strcmp(buffer, next) == 0){
-            continue;
-        }else{
-            printf(1, "%s\n", temp);
-        }
-    }
-}
 
 // redirecting the output of the cat command to input of the uniq 
 void pipeFunction(){
@@ -150,58 +70,28 @@ void pipeFunction(){
                 }
             }
         }
-    // uniqbasic();
 }
-
-
-// main function
-// int main(int argc, char* argv[]){
-//     if(argc<=1){
-//         pipeFunction();
-//         }
-//     if(argc == 2){
-//         init();
-//         dataRead(argv[1]);
-//         uniqbasic();
-//     }
-//     if(argc == 3){
-//         if(strcmp(argv[1], "-d") == 0){
-//              init();
-//         dataRead(argv[2]);
-//         uniqdfunction();
-//         }
-//         if(strcmp(argv[1], "-i") == 0){
-//              init();
-//             dataRead(argv[2]);
-//             uniqifunction();
-//         }
-//         if(strcmp(argv[1], "-c") == 0){
-//              init();
-//         dataRead(argv[2]);
-//         uniqcfunction();
-//         }
-//     if(argc > 3){
-//         printf(1, "Too many arguments given");
-//     }
-//     }
-//    exit();
-// }
 
 int 
 main(int argc, char* argv[]) {
-
-    char *flag = "basic";
-    init();
-    dataRead(argv[1]);
-    
+    char *flag;
     char *arr_of_str[20];
-    
+    if(argc <= 1){
+        flag = "basic";
+        pipeFunction();
+    }
+    if(argc == 2){
+        flag = "basic";
+        init();
+        dataRead(argv[1]);
+    }
+    if(argc == 3){
+        flag = argv[1];
+        init();
+        dataRead(argv[2]);
+    }
     for(int i = 0; i< 20; i++){
         arr_of_str[i] = arr[i];
-    }
-    printf(1, "The length is :%d\n", length);
-    for(int i=0; i < length; i++){
-        printf(1,"");
     }
     uniq(flag, arr_of_str, length);
     exit();

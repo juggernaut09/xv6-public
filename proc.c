@@ -538,8 +538,8 @@ procdump(void)
 void uniqbasic(char **arr, int length){
     char buffer[100];
     for(int i = 0; i < length; i++){
-        strncpy(buffer, arr[i], strlen(buffer));  // Copying the strings to the buffer for the comparison
-        if(strncmp(buffer, arr[i+1], strlen(buffer)) == 0){
+        strncpy(buffer, arr[i], sizeof(buffer));  // Copying the strings to the buffer for the comparison
+        if(strncmp(buffer, arr[i+1], sizeof(buffer)) == 0){
             continue;  // If the consective lines are same, continue with the next strings
         }else{
             cprintf("%s\n", buffer);
@@ -547,20 +547,86 @@ void uniqbasic(char **arr, int length){
     }
 }
 
+void uniqdfunction(char **arr, int length){
+    char buffer[100];
+    int flag = 0;
+    for(int i = 0; i < length; i++){
+        strncpy(buffer, arr[i], sizeof(buffer));
+        if(strncmp(buffer, arr[i+1], sizeof(buffer)) == 0){
+            flag = 1; // using flag to note that two lines are same
+            continue;
+        }else{
+            if(flag == 1)
+            cprintf("%s\n", buffer);
+            flag = 0;
+        }
+    }
+}
+
+// keeping a count of the entered strings
+void uniqcfunction(char **arr, int length){
+    char buffer[100];
+    int count = 1; 
+    for(int i = 0; i < length; i++){
+        strncpy(buffer, arr[i], sizeof(buffer));
+        if(strncmp(buffer, arr[i+1], sizeof(buffer)) == 0){
+            count++; // If both the lines are same, we increment the count  
+            continue;
+        }else{
+            cprintf("%d %s\n",count, buffer); 
+            count = 1;
+        }
+    }
+}
+
+// ignoring the case sensitivity 
+void uniqifunction(char **arr, int length){
+    char buffer[100];
+    char temp[100];
+    char next[100];
+    int i=0;
+    for(i = 0; i < length; i++){
+        strncpy(buffer, arr[i], sizeof(buffer));
+        strncpy(temp, buffer, sizeof(temp));
+        strncpy(next, arr[i + 1], sizeof(next));
+
+        // converting all the characters in the string to the lower case 
+        for(int j=0;buffer[j]!='\0';j++){
+            if(buffer[j]>=65 && buffer[j]<=90){
+                buffer[j]=buffer[j]+32;
+            }
+        }
+
+        for(int j=0;next[j]!='\0';j++){
+            if(next[j]>=65 && next[j]<=90){
+                next[j]=next[j]+32;
+            }
+        }
+
+        // comparing both the cases and printing only the unique string
+        if(strncmp(buffer, next, sizeof(buffer)) == 0){
+            continue;
+        }else{
+            cprintf("%s\n", temp);
+        }
+    }
+}
+
+
 int uniq(char* flag, char **arr_of_strs, int length)
 {
-  cprintf("Entered\n");
-  for(int i = 0; i< length; i++){
-      cprintf("The string :%s\n", arr_of_strs[i]);
+  if(strncmp(flag, "basic", sizeof(flag)) == 0){
+    uniqbasic(arr_of_strs, length);
   }
-  cprintf("flag : %s\n", flag);
-  cprintf("The first string is %s\n", arr_of_strs[0]);
-  // cprintf("The length is : %d\n", length);
-  // cprintf("558: %s", arr_of_strs[0]);
-  // if(strncmp(flag, "basic", strlen(flag)) == 0){
-  //   cprintf(flag);
-  //   uniqbasic(arr_of_strs, length);
-  // }
+  if(strncmp(flag, "-d", sizeof(flag)) == 0){
+    uniqdfunction(arr_of_strs, length);
+  }
+  if(strncmp(flag, "-c", sizeof(flag)) == 0){
+    uniqcfunction(arr_of_strs, length);
+  }
+  if(strncmp(flag, "-i", sizeof(flag)) == 0){
+    uniqifunction(arr_of_strs, length);
+  }
 
   return -1;
 }
