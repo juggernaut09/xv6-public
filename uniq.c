@@ -144,6 +144,7 @@ void pipeFunction(){
 
 // main function
 int main(int argc, char* argv[]){
+    printf(1,  "Uniq command is getting executed in user mode.\n");
     if(argc<=1){
         pipeFunction();
         }
