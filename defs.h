@@ -121,6 +121,7 @@ int             wait(void);
 void            wakeup(void*);
 void            yield(void);
 int             uniq(char*, char**, int);
+int             head(char**, int, int);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

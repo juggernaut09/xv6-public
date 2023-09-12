@@ -114,3 +114,26 @@ int
     return uniq(flag, argv, length);
 
  }
+
+int sys_head(void) {
+  char *argv[MAXARG];
+  int len, n;
+  uint uargv, uarg;
+  if(argint(0, (int*)&uargv) < 0 || argint(1, &len) < 0 || argint(2, &n) < 0){
+    return -1;
+  }
+  memset(argv, 0, sizeof(argv));
+    for(int i=0;; i++){
+      if(i >= NELEM(argv))
+        return -1;
+      if(fetchint(uargv+4*i, (int*)&uarg) < 0)
+        return -1;
+      if(uarg == 0){
+        argv[i] = 0;
+        break;
+      }
+      if(fetchstr(uarg, &argv[i]) < 0)
+        return -1;
+    }
+  return head(argv, len, n);
+}

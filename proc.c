@@ -615,6 +615,7 @@ void uniqifunction(char **arr, int length){
 
 int uniq(char* flag, char **arr_of_strs, int length)
 {
+  cprintf("Uniq command is getting executed in kernel mode.\n");
   if(strncmp(flag, "basic", sizeof(flag)) == 0){
     uniqbasic(arr_of_strs, length);
   }
@@ -628,5 +629,21 @@ int uniq(char* flag, char **arr_of_strs, int length)
     uniqifunction(arr_of_strs, length);
   }
 
+  return -1;
+}
+
+int head(char **arr_of_strs, int len, int n)
+{
+  if(len < n){
+      for(int i=0; i< len; i++){
+          cprintf("%s\n", arr_of_strs[i]);
+      }
+  } else {
+      if(len >= n){
+          for(int i=0; i < n; i++){
+              cprintf("%s\n", arr_of_strs[i]);
+          }
+      }
+  }
   return -1;
 }

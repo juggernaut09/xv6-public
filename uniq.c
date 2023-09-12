@@ -75,7 +75,7 @@ void pipeFunction(){
 int 
 main(int argc, char* argv[]) {
     char *flag;
-    char *arr_of_str[20];
+    char *arr_of_str[30];
     if(argc <= 1){
         flag = "basic";
         pipeFunction();
@@ -90,7 +90,7 @@ main(int argc, char* argv[]) {
         init();
         dataRead(argv[2]);
     }
-    for(int i = 0; i< 20; i++){
+    for(int i = 0; i< 30; i++){
         arr_of_str[i] = arr[i];
     }
     uniq(flag, arr_of_str, length);
