@@ -34,7 +34,8 @@ void read_input(int fd){
 }
 
 int main(int argc, char *argv[]) {
-    printf(1, "Head command is getting executed in kernel mode.\n");
+    // printf(1, "Head command is getting executed in kernel mode.\n");
+    head_message();
     int fd;
     init();
     char *arr_of_str[30];

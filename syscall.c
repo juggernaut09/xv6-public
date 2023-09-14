@@ -105,6 +105,7 @@ extern int sys_write(void);
 extern int sys_uptime(void);
 extern int sys_uniq(void);
 extern int sys_head(void);
+extern int sys_head_message(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -130,6 +131,7 @@ static int (*syscalls[])(void) = {
 [SYS_close]   sys_close,
 [SYS_uniq]    sys_uniq,
 [SYS_head]    sys_head,
+[SYS_head_message]  sys_head_message,
 };
 
 void

@@ -137,3 +137,8 @@ int sys_head(void) {
     }
   return head(argv, len, n);
 }
+
+int sys_head_message(void) {
+  cprintf("Head command is getting executed in kernel mode.\n");
+  return -1;
+}
