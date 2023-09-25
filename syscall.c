@@ -107,6 +107,7 @@ extern int sys_uniq(void);
 extern int sys_head(void);
 extern int sys_head_message(void);
 extern int sys_test_changer(void);
+extern int sys_ps(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -134,6 +135,7 @@ static int (*syscalls[])(void) = {
 [SYS_head]    sys_head,
 [SYS_head_message]  sys_head_message,
 [SYS_test_changer]  sys_test_changer,
+[SYS_ps]      sys_ps,
 };
 
 void

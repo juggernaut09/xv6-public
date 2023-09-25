@@ -124,6 +124,7 @@ int             uniq(char*, char**, int);
 int             head(char**, int, int);
 extern int      test;
 int             test_changer(void);
+int             ps(void);
  
 
 // swtch.S

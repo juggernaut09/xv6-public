@@ -27,6 +27,7 @@ int uniq(char*, char**, int);
 int head(char**, int, int);
 int head_message(void);
 int test_changer(void);
+int ps(void);
 
 // ulib.c
 int stat(const char*, struct stat*);

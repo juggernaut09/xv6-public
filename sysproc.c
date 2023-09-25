@@ -147,3 +147,9 @@ int sys_test_changer(void) {
   test_changer();
   return -1;
 }
+
+int sys_ps(void)
+{
+  ps();
+  return -1;
+}
