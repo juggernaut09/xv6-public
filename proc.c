@@ -9,6 +9,8 @@
 #include "proc.h"
 #include "spinlock.h"
 
+int test = 0;
+
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];
@@ -191,6 +193,8 @@ fork(void)
     return -1;
   }
 
+  np->created_ticks = ticks;
+
   // Copy process state from proc.
   if((np->pgdir = copyuvm(curproc->pgdir, curproc->sz)) == 0){
     kfree(np->kstack);
@@ -262,6 +266,14 @@ exit(void)
         wakeup1(initproc);
     }
   }
+  myproc()->end_ticks = ticks;
+  myproc()->total_ticks = (uint)(myproc()->end_ticks - myproc()->created_ticks);
+  if(test){
+    cprintf("created_ticks : %d \n", myproc()->created_ticks);
+    cprintf("end_ticks : %d\n", myproc()->end_ticks);
+    cprintf("total_ticks : %d\n", myproc()->total_ticks);
+  }
+  test = 0;
 
   // Jump into the scheduler, never to return.
   curproc->state = ZOMBIE;
@@ -645,5 +657,11 @@ int head(char **arr_of_strs, int len, int n)
           }
       }
   }
+  return -1;
+}
+
+int test_changer(void)
+{
+  test = 1;
   return -1;
 }

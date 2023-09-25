@@ -142,3 +142,8 @@ int sys_head_message(void) {
   cprintf("Head command is getting executed in kernel mode.\n");
   return -1;
 }
+
+int sys_test_changer(void) {
+  test_changer();
+  return -1;
+}

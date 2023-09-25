@@ -26,6 +26,7 @@ int uptime(void);
 int uniq(char*, char**, int);
 int head(char**, int, int);
 int head_message(void);
+int test_changer(void);
 
 // ulib.c
 int stat(const char*, struct stat*);
