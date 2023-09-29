@@ -142,3 +142,21 @@ int sys_head_message(void) {
   cprintf("Head command is getting executed in kernel mode.\n");
   return -1;
 }
+
+int sys_getprocstats(void) 
+{
+  int *creation_time;
+  int *end_time;
+  int *total_time;
+  
+  if(argptr(0, (char**)&creation_time, sizeof(int)) < 0)
+    return 12;
+
+  if(argptr(1, (char**)&end_time, sizeof(int)) < 0)
+    return 13;
+  
+  if(argptr(2, (char**)&total_time, sizeof(int)) < 0)
+    return 14;
+
+  return getprocstats(creation_time, end_time, total_time);
+}

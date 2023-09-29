@@ -22,4 +22,5 @@
 #define SYS_close  21
 #define SYS_uniq   22
 #define SYS_head   23
-#define SYS_head_message 24
+#define SYS_head_message    24
+#define SYS_getprocstats   25

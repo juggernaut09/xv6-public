@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
         // head filename.txt
         fd = fetch_fd(argv[1]);
         if(fd < 0){
-            printf(1, "head: cannot open '%s' for reading: No such file or directory\n", argv[3]);
+            printf(1, "head: cannot open '%s' for reading: No such file or directory\n", argv[1]);
             exit();        
         }
         read_input(fd);

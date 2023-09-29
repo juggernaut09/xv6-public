@@ -106,6 +106,7 @@ extern int sys_uptime(void);
 extern int sys_uniq(void);
 extern int sys_head(void);
 extern int sys_head_message(void);
+extern int sys_getprocstats(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -132,6 +133,7 @@ static int (*syscalls[])(void) = {
 [SYS_uniq]    sys_uniq,
 [SYS_head]    sys_head,
 [SYS_head_message]  sys_head_message,
+[SYS_getprocstats] sys_getprocstats,
 };
 
 void
