@@ -185,6 +185,8 @@ UPROGS=\
 	_head\
 	_test\
 	_ps\
+	_uniq_user\
+	_head_user\
 
 fs.img: mkfs README OS611example.txt file1.txt file2.txt $(UPROGS)
 	./mkfs fs.img README OS611example.txt file1.txt file2.txt $(UPROGS)
@@ -254,7 +256,7 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
 EXTRA=\
 	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
 	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c\
-	printf.c umalloc.c\ uniq.c head.c test.c ps.c\
+	printf.c umalloc.c\ uniq.c head.c test.c ps.c uniq_user.c head_user.c\
 	README d.txt dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\
 
