@@ -24,3 +24,6 @@
 #define SYS_head   23
 #define SYS_head_message    24
 #define SYS_getprocstats   25
+#define SYS_ps     26
+#define SYS_ps_pid 27
+#define SYS_ps_pname 28

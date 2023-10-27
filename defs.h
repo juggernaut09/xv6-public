@@ -123,6 +123,9 @@ void            yield(void);
 int             uniq(char*, char**, int);
 int             head(char**, int, int);
 int             getprocstats(int *, int *, int *);
+int             ps(void);
+int             ps_pid(int);
+int             ps_pname(char*);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

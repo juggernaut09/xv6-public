@@ -160,3 +160,22 @@ int sys_getprocstats(void)
 
   return getprocstats(creation_time, end_time, total_time);
 }
+
+int sys_ps(void)
+{
+  return ps();
+}
+
+int sys_ps_pid(void)
+{
+  int pid;
+  if (argint(0, &pid) < 0 ) return -1;
+  return ps_pid(pid);
+}
+
+int sys_ps_pname(void)
+{
+  char *pname;
+  if(argstr(0, &pname) < 0) return -1;
+  return ps_pname(pname);
+}

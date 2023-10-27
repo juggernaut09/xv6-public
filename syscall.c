@@ -107,6 +107,9 @@ extern int sys_uniq(void);
 extern int sys_head(void);
 extern int sys_head_message(void);
 extern int sys_getprocstats(void);
+extern int sys_ps(void);
+extern int sys_ps_pid(void);
+extern int sys_ps_pname(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -134,6 +137,10 @@ static int (*syscalls[])(void) = {
 [SYS_head]    sys_head,
 [SYS_head_message]  sys_head_message,
 [SYS_getprocstats] sys_getprocstats,
+[SYS_ps]      sys_ps,
+[SYS_ps_pid]  sys_ps_pid,
+[SYS_ps_pname] sys_ps_pname
+
 };
 
 void

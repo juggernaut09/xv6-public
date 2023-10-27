@@ -14,7 +14,7 @@ void init(){
         }
 }
 
-void dataRead(char *fname){
+int dataRead(char *fname){
     // This function intitializes arr which is an array of strings 
     //["I understand the Operating system.", "I understand the Operating system.", "I understand the Operating system.", 
     //"I love to work on OS.", "I love to work on OS.", "Thanks xv6"].
@@ -23,6 +23,10 @@ void dataRead(char *fname){
     char buffer[1024]; 
     char buffer1[1024];
     file = open(fname, O_RDONLY);
+    if(file < 0){
+        printf(1, "uniq: cannot open %s for reading: No such file or directory\n", fname);
+        return -1;
+    }  
     // no of bytes to read = 1024
     // buffer will have 1024 bytes read in a single stride.
     while((number_of_bytes_read = read(file, buffer, 1024)) != 0){
@@ -40,6 +44,7 @@ void dataRead(char *fname){
             }
         }
     }
+    return 0;
 }
 
 
@@ -74,6 +79,10 @@ void pipeFunction(){
 
 int 
 main(int argc, char* argv[]) {
+    // printf(1, "argc : %d", )
+    // for(int i=0; i< argc; i++){
+    //     printf(1, "%s\n", argv[i]);
+    // }
     char *flag;
     char *arr_of_str[30];
     if(argc <= 1){
@@ -83,17 +92,25 @@ main(int argc, char* argv[]) {
     if(argc == 2){
         flag = "basic";
         init();
-        dataRead(argv[1]);
+        if(dataRead(argv[1]) < 0) exit();
     }
-    if(argc == 3){
+    if(argc == 3){   
         flag = argv[1];
         init();
-        dataRead(argv[2]);
+        if(dataRead(argv[2]) < 0) exit();
     }
+    // if(argc > 3){
+    //     char *nargv[3];
+    //     for(int i=0; i< 3; i++){
+    //         nargv[i] = argv[i];
+    //     }
+    //     flag = argv[1];
+    //     init();
+    //     if(dataRead(nargv[2]) < 0) exit();
+    // }
     for(int i = 0; i< 30; i++){
         arr_of_str[i] = arr[i];
     }
     uniq(flag, arr_of_str, length);
     exit();
-    return 0;
  }

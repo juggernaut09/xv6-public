@@ -673,9 +673,9 @@ int getprocstats(int *creation_time, int *end_time, int *total_time)
       havekids = 1;
       if(p->state == ZOMBIE){
         // Found one.
-        *creation_time = ((p->creation_time) * 1000) / 1000;
-        *end_time = ((p->end_time) * 1000) / 1000;
-        *total_time = ((p->total_time * 1000) / 1000);
+        *creation_time = p->creation_time;
+        *end_time = p->end_time;
+        *total_time = p->total_time;
         pid = p->pid;
         kfree(p->kstack);
         p->kstack = 0;
@@ -699,4 +699,87 @@ int getprocstats(int *creation_time, int *end_time, int *total_time)
     // Wait for children to exit.  (See wakeup1 call in proc_exit.)
     sleep(curproc, &ptable.lock);  //DOC: wait-sleep
   }
+}
+
+int ps(void)
+{
+  struct proc *p;
+  //Enables interrupts on this processor.
+  sti();
+
+  //Loop over process table looking for process with pid.
+  acquire(&ptable.lock);
+  cprintf("name\tpid\tstate\t\tcreation time\tend time\ttotal time\n");
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->state == SLEEPING)
+      cprintf("%s \t %d \t SLEEPING \t %d ms\t\t %d ms \t\t %d ms\n", p->name,p->pid, p->creation_time, p->end_time, p->total_time);
+    else if(p->state == RUNNING)
+      cprintf("%s \t %d \t RUNNING \t %d ms\t\t %d ms \t\t %d ms\n", p->name,p->pid, p->creation_time, p->end_time, p->total_time);
+    else if(p->state == RUNNABLE)
+      cprintf("%s \t %d \t RUNNABLE \t %d ms\t\t %d ms \t\t %d ms\n", p->name,p->pid, p->creation_time, p->end_time, p->total_time);
+  }
+  release(&ptable.lock);
+  return 22;
+}
+
+int ps_pid(int pid)
+{
+  int found = 0;
+  struct proc *p;
+  //Enables interrupts on this processor.
+  sti();
+
+  //Loop over process table looking for process with pid.
+  acquire(&ptable.lock);
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->pid == pid){
+      found = 1;
+      cprintf("name\tpid\tstate\t\tcreation time\tend time\ttotal time\n");
+      if(p->state == SLEEPING)
+        cprintf("%s \t %d \t SLEEPING \t %d ms\t\t %d ms \t\t %d ms\n", p->name,p->pid, p->creation_time, p->end_time, p->total_time);
+      else if(p->state == RUNNING)
+        cprintf("%s \t %d \t RUNNING \t %d ms\t\t %d ms \t\t %d ms\n", p->name,p->pid, p->creation_time, p->end_time, p->total_time);
+      else if(p->state == RUNNABLE)
+        cprintf("%s \t %d \t RUNNABLE \t %d ms\t\t %d ms \t\t %d ms\n", p->name,p->pid, p->creation_time, p->end_time, p->total_time);
+      break;
+    }
+  }
+  release(&ptable.lock);
+  if(!found)
+  {
+    cprintf("ps: Process not found with the pid : %d.\n", pid);
+    return -1;
+  } 
+  return 22;
+}
+
+int ps_pname(char *pname)
+{
+  struct proc *p;
+  int found = 0;
+  //Enables interrupts on this processor.
+  sti();
+  
+  //Loop over process table looking for process with pid.
+  acquire(&ptable.lock);
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(strncmp(pname, p->name, sizeof(pname)) == 0){
+      found = 1;
+      cprintf("name\tpid\tstate\t\tcreation time\tend time\ttotal time\n");
+      if(p->state == SLEEPING)
+        cprintf("%s \t %d \t SLEEPING \t %d ms\t\t %d ms \t\t %d ms\n", p->name,p->pid, p->creation_time, p->end_time, p->total_time);
+      else if(p->state == RUNNING)
+        cprintf("%s \t %d \t RUNNING \t %d ms\t\t %d ms \t\t %d ms\n", p->name,p->pid, p->creation_time, p->end_time, p->total_time);
+      else if(p->state == RUNNABLE)
+        cprintf("%s \t %d \t RUNNABLE \t %d ms\t\t %d ms \t\t %d ms\n", p->name,p->pid, p->creation_time, p->end_time, p->total_time);
+      break;
+    }
+  }
+  release(&ptable.lock);
+  if(!found)
+  {
+    cprintf("ps: Process not found with the name : %s.\n", pname);
+    return -1;
+  } 
+  return 22;
 }
