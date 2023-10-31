@@ -110,6 +110,8 @@ extern int sys_getprocstats(void);
 extern int sys_ps(void);
 extern int sys_ps_pid(void);
 extern int sys_ps_pname(void);
+extern int sys_set_scheduler(void);
+extern int sys_set_priority(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -139,8 +141,9 @@ static int (*syscalls[])(void) = {
 [SYS_getprocstats] sys_getprocstats,
 [SYS_ps]      sys_ps,
 [SYS_ps_pid]  sys_ps_pid,
-[SYS_ps_pname] sys_ps_pname
-
+[SYS_ps_pname] sys_ps_pname,
+[SYS_set_scheduler] sys_set_scheduler,
+[SYS_set_priority]  sys_set_priority,
 };
 
 void

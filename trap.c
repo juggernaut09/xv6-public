@@ -53,6 +53,8 @@ trap(struct trapframe *tf)
       ticks++;
       wakeup(&ticks);
       release(&tickslock);
+      // Update time fields
+      update_process_time();
     }
     lapiceoi();
     break;

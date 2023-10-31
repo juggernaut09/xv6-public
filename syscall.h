@@ -27,3 +27,5 @@
 #define SYS_ps     26
 #define SYS_ps_pid 27
 #define SYS_ps_pname 28
+#define SYS_set_scheduler 29
+#define SYS_set_priority 30

@@ -26,10 +26,12 @@ int uptime(void);
 int uniq(char*, char**, int);
 int head(char**, int, int);
 int head_message(void);
-int getprocstats(int *creation_time, int *end_time, int *total_time);
+int getprocstats(int *creation_time, int *end_time, int *total_time, int *wtime, int *rtime);
 int ps(void);
 int ps_pid(int pid);
 int ps_pname(char *pname);
+int set_scheduler(int);
+int set_priority(int, int);
 
 // ulib.c
 int stat(const char*, struct stat*);

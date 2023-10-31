@@ -161,17 +161,17 @@ int main(int argc, char* argv[]){
     if(argc == 3){
         if(strcmp(argv[1], "-d") == 0){
              init();
-        if(dataRead(argv[1]) < 0) exit();
+        if(dataRead(argv[2]) < 0) exit();
         uniqdfunction();
         }
         if(strcmp(argv[1], "-i") == 0){
              init();
-            if(dataRead(argv[1]) < 0) exit();
+            if(dataRead(argv[2]) < 0) exit();
             uniqifunction();
         }
         if(strcmp(argv[1], "-c") == 0){
              init();
-        if(dataRead(argv[1]) < 0) exit();
+        if(dataRead(argv[2]) < 0) exit();
         uniqcfunction();
         }
     if(argc > 3){

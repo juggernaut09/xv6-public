@@ -122,10 +122,15 @@ void            wakeup(void*);
 void            yield(void);
 int             uniq(char*, char**, int);
 int             head(char**, int, int);
-int             getprocstats(int *, int *, int *);
+int             getprocstats(int *, int *, int *, int *, int *);
 int             ps(void);
 int             ps_pid(int);
 int             ps_pname(char*);
+int             set_scheduler(int);
+extern int      scheduler_type;
+int             set_priority(int, int);
+// updates process time in trap.c
+void            update_process_time();
 
 // swtch.S
 void            swtch(struct context**, struct context*);

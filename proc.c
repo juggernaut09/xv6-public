@@ -9,6 +9,8 @@
 #include "proc.h"
 #include "spinlock.h"
 
+int scheduler_type = 0;
+
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];
@@ -90,6 +92,8 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p->priority = 60;
+  p->num_run = 0;
 
   release(&ptable.lock);
 
@@ -118,6 +122,8 @@ found:
   p->creation_time = ticks;
   p->end_time = 0;
   p->total_time = 0;
+  p->rtime = 0;
+  p->iotime = 0;
 
   return p;
 }
@@ -330,40 +336,192 @@ wait(void)
 //  - swtch to start running that process
 //  - eventually that process transfers control
 //      via swtch back to the scheduler.
+// void
+// scheduler(void)
+// {
+//   struct proc *p;
+//   struct cpu *c = mycpu();
+//   c->proc = 0;
+  
+//   for(;;){
+//     // Enable interrupts on this processor.
+//     sti();
+
+//     // Loop over process table looking for process to run.
+//     acquire(&ptable.lock);
+//     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+//       if(p->state != RUNNABLE)
+//         continue;
+
+//       // Switch to chosen process.  It is the process's job
+//       // to release ptable.lock and then reacquire it
+//       // before jumping back to us.
+//       c->proc = p;
+//       switchuvm(p);
+//       p->state = RUNNING;
+
+//       swtch(&(c->scheduler), p->context);
+//       switchkvm();
+
+//       // Process is done running for now.
+//       // It should have changed its p->state before coming back.
+//       c->proc = 0;
+//     }
+//     release(&ptable.lock);
+
+//   }
+// }
+
+// void
+// scheduler(void)
+// {
+// 	struct cpu *c = mycpu();
+// 	c->proc = 0;
+	
+// 	for(;;){
+// 		// Enable interrupts on this processor.
+// 		sti();
+
+// 		acquire(&ptable.lock);
+//     struct proc *minP = 0, *p = 0;
+//     // Loop over process table looking for process to run.
+//     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+//       if(p->state != RUNNABLE)
+//         continue;
+
+//       // ignore init and sh processes from FCFS
+//       if(minP != 0){
+//         // here I find the process with the lowest creation time (the first one that was created)
+//         if(p->creation_time < minP->creation_time)
+//           minP = p;
+//       }
+//       else
+//         minP = p;
+//     }  
+
+//     if(minP != 0){
+//       // Switch to chosen process.  It is the process's job
+//       // to release ptable.lock and then reacquire it
+//       // before jumping back to us.
+//       c->proc = minP;
+//       switchuvm(minP);
+//       minP->state = RUNNING;
+//       // cprintf("cpu %d, pname %s, pid %d, rtime %d\n", c->apicid, minP->name, minP->pid, minP->rtime);
+//       swtch(&(c->scheduler), minP->context);
+//       switchkvm();
+
+//       // Process is done running for now.
+//       // It should have changed its p->state before coming back.
+//       c->proc = 0;
+//     }
+  
+// 		release(&ptable.lock);
+// 	}
+// }
+
 void
 scheduler(void)
 {
-  struct proc *p;
-  struct cpu *c = mycpu();
-  c->proc = 0;
-  
-  for(;;){
-    // Enable interrupts on this processor.
-    sti();
+	struct cpu *c = mycpu();
+	c->proc = 0;
+	
+	for(;;){
+		// Enable interrupts on this processor.
+		sti();
 
-    // Loop over process table looking for process to run.
-    acquire(&ptable.lock);
-    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-      if(p->state != RUNNABLE)
-        continue;
+		acquire(&ptable.lock);
+    if(scheduler_type == 0){ // DEFAULT round-robin
+      struct proc *p = 0;		
+			// Loop over process table looking for process to run.
+			for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+				if(p->state != RUNNABLE)
+					continue;
+				// Switch to chosen process.  It is the process's job
+				// to release ptable.lock and then reacquire it
+				// before jumping back to us.
+				c->proc = p;
+				switchuvm(p);
+				p->state = RUNNING;
+				// cprintf("cpu %d, pname %s, pid %d, rtime %d\n", c->apicid, p->name, p->pid, p->rtime);
+				swtch(&(c->scheduler), p->context);
+				switchkvm();
 
-      // Switch to chosen process.  It is the process's job
-      // to release ptable.lock and then reacquire it
-      // before jumping back to us.
-      c->proc = p;
-      switchuvm(p);
-      p->state = RUNNING;
-
-      swtch(&(c->scheduler), p->context);
-      switchkvm();
-
-      // Process is done running for now.
-      // It should have changed its p->state before coming back.
-      c->proc = 0;
+				// Process is done running for now.
+				// It should have changed its p->state before coming back.
+				c->proc = 0;
+			}
     }
-    release(&ptable.lock);
+		else if(scheduler_type == 1) { // FCFS
+      struct proc *minP = 0, *p = 0;
+			// Loop over process table looking for process to run.
+			for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+				if(p->state != RUNNABLE)
+					continue;
 
-  }
+				// ignore init and sh processes from FCFS
+				if(minP != 0){
+					// here I find the process with the lowest creation time (the first one that was created)
+					if(p->creation_time < minP->creation_time)
+						minP = p;
+				}
+				else
+					minP = p;
+			}  
+
+			if(minP != 0){
+				// Switch to chosen process.  It is the process's job
+				// to release ptable.lock and then reacquire it
+				// before jumping back to us.
+				c->proc = minP;
+				switchuvm(minP);
+				minP->state = RUNNING;
+				// cprintf("cpu %d, pname %s, pid %d, rtime %d\n", c->apicid, minP->name, minP->pid, minP->rtime);
+				swtch(&(c->scheduler), minP->context);
+				switchkvm();
+
+				// Process is done running for now.
+				// It should have changed its p->state before coming back.
+				c->proc = 0;
+			}
+    }
+		else if(scheduler_type == 2) // PBS
+    {
+      struct proc *lowP = 0, *p = 0;
+			for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+				if(p->state != RUNNABLE)
+					continue;
+				if(lowP == 0)
+					lowP = p;
+				else{
+					if(lowP->priority > p->priority)
+						lowP = p;
+					else if(lowP->priority == p->priority && lowP->num_run > p->num_run)
+						lowP = p;
+				}
+			}
+			for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+				if(p->state != RUNNABLE) continue;
+				if(p->priority == lowP->priority && p->num_run == lowP->num_run){
+					lowP = p;
+					break;
+				}
+			}
+			if(lowP != 0){
+				c->proc = lowP;
+				switchuvm(lowP);
+				lowP->state = RUNNING;
+				lowP->num_run++;
+				// cprintf("cpu %d, pname %s, pid %d, priority %d, rtime %d\n", c->apicid, lowP->name, lowP->pid, lowP->priority, lowP->rtime);
+				swtch(&(c->scheduler), lowP->context);
+				switchkvm();
+
+				// Process is done running for now.
+				// It should have changed its p->state before coming back.
+				c->proc = 0;					
+			}
+    }
+		release(&ptable.lock);
+	}
 }
 
 // Enter scheduler.  Must hold only ptable.lock
@@ -393,15 +551,42 @@ sched(void)
 }
 
 // Give up the CPU for one scheduling round.
+// void
+// yield(void)
+// {
+//   acquire(&ptable.lock);  //DOC: yieldlock
+//   myproc()->state = RUNNABLE;
+//   sched();
+//   release(&ptable.lock);
+// }
 void
 yield(void)
 {
-  acquire(&ptable.lock);  //DOC: yieldlock
-  myproc()->state = RUNNABLE;
-  sched();
-  release(&ptable.lock);
+	acquire(&ptable.lock);  //DOC: yieldlock
+  if(scheduler_type == 2){ //PBS
+    struct proc *p = 0, *lowP = 0;
+		for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+			if(p->state != RUNNABLE)
+				continue;
+			if(lowP == 0)
+				lowP = p;
+			else{
+				if(p->priority <= lowP->priority)
+					lowP = p;
+			}
+		}
+		if(lowP != 0 && lowP->priority <= myproc()->priority){
+			myproc()->state = RUNNABLE;
+			sched();		
+		}
+  }
+  else if(scheduler_type == 0) // DEFUALT round-robin
+  { 
+    myproc()->state = RUNNABLE;
+		sched();
+  }
+	release(&ptable.lock);
 }
-
 // A fork child's very first scheduling by scheduler()
 // will swtch here.  "Return" to user space.
 void
@@ -657,7 +842,7 @@ int head(char **arr_of_strs, int len, int n)
   return -1;
 }
 
-int getprocstats(int *creation_time, int *end_time, int *total_time)
+int getprocstats(int *creation_time, int *end_time, int *total_time, int *wtime, int *rtime)
 {
   struct proc *p;
   int havekids, pid;
@@ -676,6 +861,8 @@ int getprocstats(int *creation_time, int *end_time, int *total_time)
         *creation_time = p->creation_time;
         *end_time = p->end_time;
         *total_time = p->total_time;
+        *wtime = p->end_time - p->creation_time - p->rtime;
+				*rtime = p->rtime;
         pid = p->pid;
         kfree(p->kstack);
         p->kstack = 0;
@@ -782,4 +969,41 @@ int ps_pname(char *pname)
     return -1;
   } 
   return 22;
+}
+
+int set_scheduler(int sched)
+{
+  if(sched != 0 && sched != 1 && sched != 2) return -1;
+  scheduler_type = sched;
+  return 29;
+}
+
+// Changes Process priority
+int set_priority(int pid, int priority){
+  struct proc *p = 0;
+  int old_priority = -1;
+  acquire(&ptable.lock);
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->pid == pid){
+      old_priority = p->priority;
+      p->priority = priority;
+      if(old_priority != priority)
+        p->num_run = 0;
+      break;
+    }
+  }
+  release(&ptable.lock);
+  return old_priority;
+}
+
+void update_process_time(){
+	acquire(&ptable.lock);
+	struct proc *p;
+	for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+		if(p->state == RUNNING)
+			p->rtime++;
+		else if(p->state == SLEEPING)
+			p->iotime++;
+	}
+	release(&ptable.lock);
 }

@@ -51,7 +51,11 @@ struct proc {
   char name[16];               // Process name (debugging)
   int creation_time;           // Record when the process was created (in ticks)
   int end_time;                // Record when the process ended (in ticks)
-  int total_time;          // Record the total runtime (in ticks)
+  int total_time;              // Record the total runtime (in ticks)
+  int rtime;                   // Record the scheduled time (in ticks)
+  int iotime;                  // Record the total number of ticks the process has been sleeping (in ticks)
+  int priority;                // priority of the process
+  long long int num_run;       // number of times process runs 
 };
 
 // Process memory is laid out contiguously, low addresses first:

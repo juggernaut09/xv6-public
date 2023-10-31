@@ -148,6 +148,8 @@ int sys_getprocstats(void)
   int *creation_time;
   int *end_time;
   int *total_time;
+  int *wtime;
+  int *rtime;
   
   if(argptr(0, (char**)&creation_time, sizeof(int)) < 0)
     return 12;
@@ -157,8 +159,14 @@ int sys_getprocstats(void)
   
   if(argptr(2, (char**)&total_time, sizeof(int)) < 0)
     return 14;
+  
+  if(argptr(3, (char**)&wtime, sizeof(int)) < 0)
+    return 15;
+  
+  if(argptr(4, (char**)&rtime, sizeof(int)) < 0)
+    return 16;
 
-  return getprocstats(creation_time, end_time, total_time);
+  return getprocstats(creation_time, end_time, total_time, wtime, rtime);
 }
 
 int sys_ps(void)
@@ -178,4 +186,21 @@ int sys_ps_pname(void)
   char *pname;
   if(argstr(0, &pname) < 0) return -1;
   return ps_pname(pname);
+}
+
+int  sys_set_scheduler(void)
+{
+  int sched;
+  if (argint(0, &sched) < 0 ) return -1;
+  return set_scheduler(sched);
+}
+
+int
+sys_set_priority(void){
+  int pid, pr;
+  if(argint(0, &pid) < 0)
+    return -1;
+  if(argint(1, &pr) < 0)
+    return -1;
+  return set_priority(pid, pr);
 }
