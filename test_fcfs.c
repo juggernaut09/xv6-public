@@ -119,11 +119,11 @@ int main(int argc, char *argv[]) {
         if ( pid < 0) {
             printf(2, "Failed to get process times for PID %d\n", pid);
         } else {
-            printf(1, "creation_time : %d ms\n", creation_time);
-            printf(1, "end_time : %d ms\n", end_time);
-            printf(1, "total_time : %d ms\n", total_time);
-            printf(1, "wtime : %d ms\n", wtime);
-            printf(1, "rtime : %d ms\n", rtime);
+            printf(1, "creation_time : %d ticks\n", creation_time);
+            printf(1, "end_time : %d ticks\n", end_time);
+            printf(1, "total_time : %d ticks\n", total_time);
+            printf(1, "wtime : %d ticks\n", wtime);
+            printf(1, "rtime : %d ticks\n", rtime);
         }
     }
 

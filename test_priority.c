@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
     // Print user processes
     printf(1, "Executing User Processes with highest Priority : 1\n");
     for (int i = 0; i < user_count; i++) {
-        printf(1, "%s\n", user_processes[i]);
+        // printf(1, "%s\n", user_processes[i]);
         char *inputString = user_processes[i];
         char *tokens[MAX_TOKENS];
         int count;
@@ -138,20 +138,20 @@ int main(int argc, char *argv[]) {
             if (getprocstats(&creation_time, &end_time, &total_time, &wtime, &rtime) < 0) {
                 printf(2, "Failed to get process times for PID %d\n", pid);
             } else {
-                printf(1, "creation_time : %d ms\n", creation_time);
-                printf(1, "end_time : %d ms\n", end_time);
-                printf(1, "total_time : %d ms\n", total_time);
-                printf(1, "wtime : %d ms\n", wtime);
-                printf(1, "rtime : %d ms\n", rtime);
+                printf(1, "creation_time : %d ticks\n", creation_time);
+                printf(1, "end_time : %d ticks\n", end_time);
+                printf(1, "total_time : %d ticks\n", total_time);
+                printf(1, "wtime : %d ticks\n", wtime);
+                printf(1, "rtime : %d ticks\n", rtime);
             }
         }
 
     }
 
     // Print kernel processes
+    printf(1, "\n");
     printf(1, "Executing Kernel Processes with lowest Priority : 5\n");
     for (int i = 0; i < kernel_count; i++) {
-        printf(1, "%s\n", kernel_processes[i]);
         char *inputString = kernel_processes[i];
         char *tokens[MAX_TOKENS];
         int count;
@@ -193,11 +193,11 @@ int main(int argc, char *argv[]) {
             if (getprocstats(&creation_time, &end_time, &total_time, &wtime, &rtime) < 0) {
                 printf(2, "Failed to get process times for PID %d\n", pid);
             } else {
-                printf(1, "creation_time : %d ms\n", creation_time);
-                printf(1, "end_time : %d ms\n", end_time);
-                printf(1, "total_time : %d ms\n", total_time);
-                printf(1, "wtime : %d ms\n", wtime);
-                printf(1, "rtime : %d ms\n", rtime);
+                printf(1, "creation_time : %d ticks\n", creation_time);
+                printf(1, "end_time : %d ticks\n", end_time);
+                printf(1, "total_time : %d ticks\n", total_time);
+                printf(1, "wtime : %d ticks\n", wtime);
+                printf(1, "rtime : %d ticks\n", rtime);
             }
         }
         
