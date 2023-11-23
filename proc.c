@@ -203,7 +203,7 @@ fork(void)
   }
 
   // Copy process state from proc.
-  if((np->pgdir = copyuvm(curproc->pgdir, curproc->sz)) == 0){
+  if((np->pgdir = copyuvm(curproc->pgdir, curproc->sz, curproc->stack_tracker)) == 0){ // changed
     kfree(np->kstack);
     np->kstack = 0;
     np->state = UNUSED;
@@ -212,7 +212,7 @@ fork(void)
   np->sz = curproc->sz;
   np->parent = curproc;
   *np->tf = *curproc->tf;
-
+  np->stack_tracker = curproc->stack_tracker; // changed
   // Clear %eax so that fork returns 0 in the child.
   np->tf->eax = 0;
 

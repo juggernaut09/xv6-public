@@ -55,7 +55,8 @@ struct proc {
   int rtime;                   // Record the scheduled time (in ticks)
   int iotime;                  // Record the total number of ticks the process has been sleeping (in ticks)
   int priority;                // priority of the process
-  long long int num_run;       // number of times process runs 
+  long long int num_run;       // number of times process runs
+  uint stack_tracker;           // Stack pointer tracker 
 };
 
 // Process memory is laid out contiguously, low addresses first:
