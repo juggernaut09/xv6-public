@@ -144,9 +144,9 @@ vectors.S: vectors.pl
 	./vectors.pl > vectors.S
 
 ULIB = ulib.o usys.o printf.o umalloc.o
-
+# changed
 _%: %.o $(ULIB)
-	$(LD) $(LDFLAGS) -N -e main -Ttext 0x3000 -o $@ $^
+	$(LD) $(LDFLAGS) -N -e main -Ttext 0x3000 -o $@ $^ 
 	$(OBJDUMP) -S $@ > $*.asm
 	$(OBJDUMP) -t $@ | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $*.sym
 
@@ -155,7 +155,7 @@ _forktest: forktest.o $(ULIB)
 	# in order to be able to max out the proc table.
 	$(LD) $(LDFLAGS) -N -e main -Ttext 0x3000 -o _forktest forktest.o ulib.o usys.o
 	$(OBJDUMP) -S _forktest > forktest.asm
-
+# changed
 mkfs: mkfs.c fs.h
 	gcc -Werror -Wall -o mkfs mkfs.c
 
