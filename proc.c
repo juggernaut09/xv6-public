@@ -203,7 +203,7 @@ fork(void)
   }
 
   // Copy process state from proc.
-  if((np->pgdir = copyuvm(curproc->pgdir, curproc->sz, curproc->stack_tracker)) == 0){ // changed
+  if((np->pgdir = copyuvm(curproc->pgdir, curproc->sz)) == 0){ // changed
     kfree(np->kstack);
     np->kstack = 0;
     np->state = UNUSED;

@@ -342,18 +342,18 @@ clearpteu(pde_t *pgdir, char *uva)
 // Given a parent process's page table, create a copy
 // of it for a child.
 pde_t*
-copyuvm(pde_t *pgdir, uint sz, uint stack_point) // changed
+copyuvm(pde_t *pgdir, uint sz) // changed
 {
   pde_t *d;
   pte_t *pte;
   uint pa, i, flags;
   char *mem;
 
-  int guard = stack_point - 151 * PGSIZE; // changed
+  // int guard = stack_point - 151 * PGSIZE; // changed
 
   if((d = setupkvm()) == 0)
     return 0;
-  for(i = 3 * PGSIZE; i < guard; i += PGSIZE){ // changed
+  for(i = 3 * PGSIZE; i < sz; i += PGSIZE){ // changed
     if((pte = walkpgdir(pgdir, (void *) i, 0)) == 0)
       panic("copyuvm: pte should exist");
     if(!(*pte & PTE_P))
@@ -368,21 +368,22 @@ copyuvm(pde_t *pgdir, uint sz, uint stack_point) // changed
       goto bad;
     }
   }
+  
   /*Changed*/
-  if ((pte = walkpgdir(pgdir, (void *)(stack_point - PGSIZE), 1)) == 0)
-    panic("copyuvm: Invalid PTE");
-  if (!(*pte & PTE_P))
-    panic("compyuvm: Invalid page");
-  pa = PTE_ADDR(*pte);
-  flags = PTE_FLAGS(*pte);
-  if ((mem = kalloc()) == 0)
-    goto bad;
-  memmove(mem, (char *)P2V(pa), PGSIZE);
-  if (mappages(d, (void *)(stack_point - PGSIZE), PGSIZE, V2P(mem), flags) < 0) // changed
-  {
-    kfree(mem);
-    goto bad;
-  }
+  // if ((pte = walkpgdir(pgdir, (void *)(stack_point - PGSIZE), 1)) == 0)
+  //   panic("copyuvm: Invalid PTE");
+  // if (!(*pte & PTE_P))
+  //   panic("compyuvm: Invalid page");
+  // pa = PTE_ADDR(*pte);
+  // flags = PTE_FLAGS(*pte);
+  // if ((mem = kalloc()) == 0)
+  //   goto bad;
+  // memmove(mem, (char *)P2V(pa), PGSIZE);
+  // if (mappages(d, (void *)(stack_point - PGSIZE), PGSIZE, V2P(mem), flags) < 0) // changed
+  // {
+  //   kfree(mem);
+  //   goto bad;
+  // }
   /*Changed*/
   return d;
 bad:
